@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import time
+from fastapi import Request
 
 from app.api.router import api_router
 from app.core.config import settings
@@ -14,6 +16,22 @@ def create_app() -> FastAPI:
         seed_default_rbac(db)
 
     app = FastAPI(title=settings.app_name)
+    
+    #to check how much time request took to response -->
+    @app.middleware("http")
+    async def log_request_time(request: Request, call_next):
+        start = time.perf_counter()
+
+        response = await call_next(request)
+
+        duration_ms = (time.perf_counter() - start) * 1000
+        print(
+            f"{request.method} {request.url.path} "
+            f"status={response.status_code} "
+            f"took={duration_ms:.2f}ms"
+        )
+
+        return response
 
     allowed_origins = [
         settings.frontend_origin.rstrip("/"),
