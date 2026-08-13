@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "Baghpat Backend"
+    app_name: str = "Baghpat aminagar Backend"
     database_url: str
     frontend_origin: str = "http://localhost:3000"
     clerk_webhook_secret: str = ""
